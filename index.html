@@ -142,13 +142,12 @@
                 { action: "Participated in clean-ups", points: 2 },
                 { action: "Used eco-friendly products", points: 2 },
             ],
-            "Shopping & Consumption": [
+           "Shopping & Consumption": [
                 { action: "Bought second-hand", points: 2 },
                 { action: "Chose minimal packaging", points: 2 },
                 { action: "Supported sustainable brands", points: 3 },
                 { action: "Used a reusable shopping bag", points: 1 },
             ]
-          
         };
 
         function saveSelection(category, action, isChecked) {
@@ -178,7 +177,7 @@
             }
 
             let pointsBox = document.getElementById("points-box");
-            pointsBox.textContent = You have earned ${totalPoints} points!;
+            pointsBox.textContent = `You have earned ${totalPoints} points!`; // Fixed string interpolation
             pointsBox.style.display = totalPoints > 0 ? "block" : "none";
         }
 
@@ -186,12 +185,19 @@
             const infoBox = document.getElementById('info');
             const selections = loadSelections();
 
-            infoBox.innerHTML = <h3>${category}</h3> + 
-                data[category].map(item => {
+            infoBox.innerHTML = `
+                <h3>${category}</h3>
+                ${data[category].map(item => {
                     const checked = selections[category]?.[item.action] ? "checked" : "";
-                    return <label><input type='checkbox' ${checked} onchange="saveSelection('${category}', '${item.action}', this.checked)"> ${item.action} (${item.points} pts)</label>;
-                }).join('');
-                
+                    return `
+                        <label>
+                            <input type='checkbox' ${checked} onchange="saveSelection('${category}', '${item.action}', this.checked)">
+                            ${item.action} (${item.points} pts)
+                        </label>
+                    `;
+                }).join('')}
+            `;
+            
             infoBox.style.display = 'block';
         }
 
