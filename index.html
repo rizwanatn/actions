@@ -63,6 +63,17 @@
             display: block;
             margin: 5px 0;
         }
+        .points-box {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            display: none;
+        }
         .box:nth-child(1) { background-color: #ff5733; }
         .box:nth-child(2) { background-color: #33ff57; }
         .box:nth-child(3) { background-color: #3357ff; }
@@ -87,63 +98,76 @@
     </div>
     
     <div id="info" class="info-box"></div>
+    <div id="points-box" class="points-box"></div>
     
     <script>
         const data = {
             "Travel & Transportation": [
-                "Walked or cycled",
-                "Used public transport",
-                "Carpooled or rideshared",
-                "Turned off engine when idling",
-                "Used an electric/hybrid vehicle"
+                { action: "Walked or cycled", points: 10 },
+                { action: "Used public transport", points: 8 },
+                { action: "Carpooled or rideshared", points: 7 },
+                { action: "Turned off engine when idling", points: 5 },
+                { action: "Used an electric/hybrid vehicle", points: 12 }
             ],
             "Home & Energy Use": [
-                "Turned off lights and devices",
-                "Used LED bulbs",
-                "Reduced AC/heating use",
-                "Ventilated naturally"
+                { action: "Turned off lights and devices", points: 5 },
+                { action: "Used LED bulbs", points: 6 },
+                { action: "Reduced AC/heating use", points: 8 },
+                { action: "Ventilated naturally", points: 7 }
             ],
             "Food & Diet": [
-                "Ate plant-based meals",
-                "Used reusable bags and bottles",
-                "Reduced food waste",
-                "Avoided packaged drinks"
-            ],
-            "Workplace & Study": [
-                "Used digital notes",
-                "Printed only when needed",
-                "Turned off devices",
-                "Used a reusable mug"
-            ],
-            "Water Conservation": [
-                "Took shorter showers",
-                "Fixed leaks or turned off taps",
-                "Used water-efficient fixtures"
-            ],
-            "Waste Management": [
-                "Recycled",
-                "Avoided single-use plastics",
-                "Reused or upcycled items"
-            ],
-            "Nature & Outdoor Activities": [
-                "Planted a tree or cared for plants",
-                "Participated in clean-ups",
-                "Used eco-friendly products"
-            ],
-            "Shopping & Consumption": [
-                "Bought second-hand",
-                "Chose minimal packaging",
-                "Supported sustainable brands",
-                "Used a reusable shopping bag"
+                { action: "Ate plant-based meals", points: 10 },
+                { action: "Used reusable bags and bottles", points: 5 },
+                { action: "Reduced food waste", points: 8 },
+                { action: "Avoided packaged drinks", points: 6 }
             ]
         };
-        
+
+        function saveSelection(category, action, isChecked) {
+            let selections = JSON.parse(localStorage.getItem("selections")) || {};
+            if (!selections[category]) {
+                selections[category] = {};
+            }
+            selections[category][action] = isChecked;
+            localStorage.setItem("selections", JSON.stringify(selections));
+            updatePoints();
+        }
+
+        function loadSelections() {
+            return JSON.parse(localStorage.getItem("selections")) || {};
+        }
+
+        function updatePoints() {
+            let selections = loadSelections();
+            let totalPoints = 0;
+
+            for (let category in selections) {
+                for (let action in selections[category]) {
+                    if (selections[category][action]) {
+                        totalPoints += data[category]?.find(item => item.action === action)?.points || 0;
+                    }
+                }
+            }
+
+            let pointsBox = document.getElementById("points-box");
+            pointsBox.textContent = `You have earned ${totalPoints} points!`;
+            pointsBox.style.display = totalPoints > 0 ? "block" : "none";
+        }
+
         function showInfo(category) {
             const infoBox = document.getElementById('info');
-            infoBox.innerHTML = `<h3>${category}</h3>` +
-                data[category].map(item => `<label><input type='checkbox'> ${item}</label>`).join('');
+            const selections = loadSelections();
+
+            infoBox.innerHTML = `<h3>${category}</h3>` + 
+                data[category].map(item => {
+                    const checked = selections[category]?.[item.action] ? "checked" : "";
+                    return `<label><input type='checkbox' ${checked} onchange="saveSelection('${category}', '${item.action}', this.checked)"> ${item.action} (${item.points} pts)</label>`;
+                }).join('');
+                
             infoBox.style.display = 'block';
         }
+
+        updatePoints();
     </script>
 </body>
 </html>
