@@ -103,24 +103,52 @@
     <script>
         const data = {
             "Travel & Transportation": [
-                { action: "Walked or cycled", points: 10 },
-                { action: "Used public transport", points: 8 },
-                { action: "Carpooled or rideshared", points: 7 },
-                { action: "Turned off engine when idling", points: 5 },
-                { action: "Used an electric/hybrid vehicle", points: 12 }
+                { action: "Walked or cycled", points: 1 },
+                { action: "Used public transport", points: 2 },
+                { action: "Carpooled or rideshared", points: 3 },
+                { action: "Turned off engine when idling", points: 1 },
+                { action: "Used an electric/hybrid vehicle", points: 3 }
             ],
             "Home & Energy Use": [
-                { action: "Turned off lights and devices", points: 5 },
-                { action: "Used LED bulbs", points: 6 },
-                { action: "Reduced AC/heating use", points: 8 },
-                { action: "Ventilated naturally", points: 7 }
+                { action: "Turned off lights and devices", points: 1 },
+                { action: "Used LED bulbs", points: 2 },
+                { action: "Reduced AC/heating use", points: 2 },
+                { action: "Ventilated naturally", points: 1 }
             ],
             "Food & Diet": [
-                { action: "Ate plant-based meals", points: 10 },
-                { action: "Used reusable bags and bottles", points: 5 },
-                { action: "Reduced food waste", points: 8 },
-                { action: "Avoided packaged drinks", points: 6 }
+                { action: "Ate plant-based meals", points: 3 },
+                { action: "Used reusable bags and bottles", points: 1 },
+                { action: "Reduced food waste", points: 2 },
+                { action: "Avoided packaged drinks", points: 1 }
+            ],
+            "Workplace & Study": [
+                { action: "Used digital notes", points: 1 },
+                { action: "Printed only when needed", points: 1 },
+                { action: "Turned off devices", points: 1 },
+                { action: "Used a reusable mug", points: 1 },
+            ],
+            "Waste Management": [
+                { action: "Recycled", points: 2 },
+                { action: "Avoided single-use plastics", points: 2 },
+                { action: "Reused or upcycled items", points: 3 },
+            ],
+            "Water Conservation": [
+                { action: "Took short showers", points: 2 },
+                { action: "Fixed leaks or turned off taps", points: 1 },
+                { action: "Used water-efficient fixtures", points: 2 },
+            ],
+            "Nature & Outdoor Activities": [
+                { action: "Planted a tree or cared for plants", points: 3 },
+                { action: "Participated in clean-ups", points: 2 },
+                { action: "Used eco-friendly products", points: 2 },
+            ],
+           "Shopping & Consumption": [
+                { action: "Bought second-hand", points: 2 },
+                { action: "Chose minimal packaging", points: 2 },
+                { action: "Supported sustainable brands", points: 3 },
+                { action: "Used a reusable shopping bag", points: 1 },
             ]
+          
         };
 
         function saveSelection(category, action, isChecked) {
@@ -150,7 +178,7 @@
             }
 
             let pointsBox = document.getElementById("points-box");
-            pointsBox.textContent = `You have earned ${totalPoints} points!`;
+            pointsBox.textContent = You have earned ${totalPoints} points!;
             pointsBox.style.display = totalPoints > 0 ? "block" : "none";
         }
 
@@ -158,10 +186,10 @@
             const infoBox = document.getElementById('info');
             const selections = loadSelections();
 
-            infoBox.innerHTML = `<h3>${category}</h3>` + 
+            infoBox.innerHTML = <h3>${category}</h3> + 
                 data[category].map(item => {
                     const checked = selections[category]?.[item.action] ? "checked" : "";
-                    return `<label><input type='checkbox' ${checked} onchange="saveSelection('${category}', '${item.action}', this.checked)"> ${item.action} (${item.points} pts)</label>`;
+                    return <label><input type='checkbox' ${checked} onchange="saveSelection('${category}', '${item.action}', this.checked)"> ${item.action} (${item.points} pts)</label>;
                 }).join('');
                 
             infoBox.style.display = 'block';
